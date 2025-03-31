@@ -35,6 +35,7 @@ describe('Getinbox', () => {
       const getinbox = new Getinbox({ apiKey: 'test' });
       expect(typeof getinbox.emails.find).toBe('function');
       expect(typeof getinbox.emails.verify).toBe('function');
+      expect(typeof getinbox.emails.disposable).toBe('function');
     });
 
     describe('find', () => {
@@ -95,6 +96,37 @@ describe('Getinbox', () => {
         const getinbox = new Getinbox({ apiKey: 'test' });
         await expect(
           getinbox.emails.verify({
+            email: 'john.doe@gmail.com',
+          })
+        ).rejects.toThrow(errorMessage);
+      });
+    });
+
+    describe('disposable', () => {
+      it('should check if email is disposable', async () => {
+        fetchMock.mockResolvedValueOnce(
+          new Response(JSON.stringify({ isDisposable: true }), {
+            headers: { 'Content-Type': 'application/json' },
+            status: 200,
+          })
+        );
+        const getinbox = new Getinbox({ apiKey: 'test' });
+        const res = await getinbox.emails.disposable({
+          email: 'john.doe@temp-mail.org',
+        });
+        expect(res.isDisposable).toBe(true);
+      });
+
+      it('should throw error if request fails', async () => {
+        const errorMessage = 'Request failed';
+        fetchMock.mockResolvedValueOnce(
+          new Response(JSON.stringify({ message: errorMessage }), {
+            status: 400,
+          })
+        );
+        const getinbox = new Getinbox({ apiKey: 'test' });
+        await expect(
+          getinbox.emails.disposable({
             email: 'john.doe@gmail.com',
           })
         ).rejects.toThrow(errorMessage);

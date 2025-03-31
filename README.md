@@ -47,6 +47,11 @@ const { email } = await getinbox.emails.find({
 const { isValid } = await getinbox.emails.verify({
   email: 'elon@spacex.com',
 });
+
+// Check if email is disposable (temporary)
+const { isDisposable } = await getinbox.emails.disposable({
+  email: 'test@temp-mail.org',
+});
 ```
 
 ## Requirements
@@ -100,6 +105,18 @@ const response = await getinbox.emails.verify({
 console.log(response.isValid); // => true/false
 ```
 
+### Checking Disposable Email Addresses
+
+Check if an email address is using a disposable or temporary email service:
+
+```typescript
+const response = await getinbox.emails.disposable({
+  email: 'john.doe@temp-mail.org',
+});
+
+console.log(response.isDisposable); // => true/false
+```
+
 ## Features in Detail
 
 ### Email Finder
@@ -141,6 +158,7 @@ import {
   GetinboxOptions,
   FindEmailOptions,
   VerifyEmailOptions,
+  CheckDisposableOptions,
 } from 'getinbox';
 
 // All options are fully typed
@@ -170,6 +188,12 @@ const options: FindEmailOptions = {
 | Property | Type     | Description             | Required |
 | -------- | -------- | ----------------------- | -------- |
 | `email`  | `string` | Email address to verify | `true`   |
+
+### CheckDisposableOptions
+
+| Property | Type     | Description                          | Required |
+| -------- | -------- | ------------------------------------ | -------- |
+| `email`  | `string` | Email address to check if disposable | `true`   |
 
 ## License
 

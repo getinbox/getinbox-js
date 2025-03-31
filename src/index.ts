@@ -37,6 +37,17 @@ export type VerifyEmailResponse = {
   isValid: boolean;
 };
 
+export type CheckDisposableOptions = {
+  /**
+   * The email address to check if it's disposable (e.g., 'emusk@temp-mail.org').
+   */
+  email: string;
+};
+
+export type CheckDisposableResponse = {
+  isDisposable: boolean;
+};
+
 type _FetchOpts = {
   method: 'GET' | 'POST';
   pathname: `/${string}`;
@@ -60,6 +71,7 @@ export class Getinbox {
   public emails = {
     find: this._findEmail.bind(this),
     verify: this._verifyEmail.bind(this),
+    disposable: this._checkDisposable.bind(this),
   };
 
   private async _fetch<T>(opts: _FetchOpts) {
@@ -100,6 +112,16 @@ export class Getinbox {
       body: {
         email: options.email,
       } satisfies VerifyEmailOptions,
+    });
+  }
+
+  private async _checkDisposable(options: CheckDisposableOptions) {
+    return this._fetch<CheckDisposableResponse>({
+      method: 'POST',
+      pathname: '/v1/emails/disposable',
+      body: {
+        email: options.email,
+      } satisfies CheckDisposableOptions,
     });
   }
 }
