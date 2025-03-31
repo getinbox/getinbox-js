@@ -101,7 +101,7 @@ export class Getinbox {
       body: {
         name: options.name,
         company: options.company,
-      } satisfies FindEmailOptions,
+      },
     });
   }
 
@@ -111,7 +111,7 @@ export class Getinbox {
       pathname: '/v1/emails/verify',
       body: {
         email: options.email,
-      } satisfies VerifyEmailOptions,
+      },
     });
   }
 
@@ -120,8 +120,8 @@ export class Getinbox {
       method: 'POST',
       pathname: '/v1/emails/disposable',
       body: {
-        email: options.email,
-      } satisfies CheckDisposableOptions,
+        value: options.email,
+      },
     });
   }
 }
